@@ -6,31 +6,33 @@ import java.sql.Timestamp;
 
 public class CTask {
     int id;
-    int[] sub;
+    public int[] sub;
     long[] time;
     long create_time;
     long start_time;
+    int reputation;
 
-    public CTask(int id, int type) {
+    public CTask(int id, int type, int reputation) {
         this.id = id;
+        this.reputation = reputation;
         switch (type) {
             case 0:
                 this.sub = GlobleBean.SUIT;
-                this.time = getTime(0);
+                this.time = setInitTime(0);
                 break;
             case 1:
                 this.sub = GlobleBean.JEANS;
-                this.time = getTime(1);
+                this.time = setInitTime(1);
                 break;
             case 2:
                 this.sub = GlobleBean.DOWNJACKET;
-                this.time = getTime(2);
+                this.time = setInitTime(2);
                 break;
             default:
         }
     }
 
-    public long[] getTime(int type) {
+    public long[] setInitTime(int type) {
         long start = System.currentTimeMillis();
         create_time = start_time;
         switch (type) {
@@ -102,5 +104,25 @@ public class CTask {
                 ) {ret+=""+y+" ";
         }
         return ret;
+    }
+
+    public long[] getTime() {
+        return time;
+    }
+
+    public void setTime(long[] time) {
+        this.time = time;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int[] getSub() {
+        return sub;
+    }
+
+    public int getReputation() {
+        return reputation;
     }
 }

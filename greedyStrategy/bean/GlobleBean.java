@@ -6,7 +6,8 @@ public class GlobleBean {
     public static int DOWNJACKET[]={8,9,10,11,12};
 
     /*   工人技能说明
-     *   a 虚拟打版；b 裁布；c 辅料加工； d 缝制；e 羽绒处理
+         工人类型
+     *   a 虚拟打版0；b 裁布1；c 辅料加工2； d 缝制3；e 羽绒处理4
      *   1~4 西服
      *   5~7 牛仔
      *   8~12羽绒服
