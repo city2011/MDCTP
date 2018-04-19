@@ -15,6 +15,6 @@ public class testCTP {
     public void testTaskAssignment()
     {
         CTP ctp = new CTP();
-        ctp.taskAssignment();
+        ctp.taskAssignment(100,200);
     }
 }

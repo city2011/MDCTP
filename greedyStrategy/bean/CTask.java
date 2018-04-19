@@ -10,7 +10,9 @@ public class CTask {
     long[] time;
     long create_time;
     long start_time;
+    long complete_time;
     int reputation;
+    boolean status = false;
 
     public CTask(int id, int type, int reputation) {
         this.id = id;
@@ -34,7 +36,7 @@ public class CTask {
 
     public long[] setInitTime(int type) {
         long start = System.currentTimeMillis();
-        create_time = start_time;
+        create_time = start;
         switch (type) {
             case 0:
                 time = new long[8];
@@ -86,7 +88,6 @@ public class CTask {
 
     public void updateTime(long upnumber) {
         start_time = upnumber;
-
         for (int i = 0; i < time.length; i++
                 ) {
             time[i]+=upnumber-create_time;
@@ -124,5 +125,37 @@ public class CTask {
 
     public int getReputation() {
         return reputation;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public long getComplete_time() {
+        return complete_time;
+    }
+
+    public void setComplete_time(long complete_time) {
+        this.complete_time = complete_time;
+    }
+
+    public long getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(long create_time) {
+        this.create_time = create_time;
+    }
+
+    public long getStart_time() {
+        return start_time;
+    }
+
+    public void setStart_time(long start_time) {
+        this.start_time = start_time;
     }
 }
