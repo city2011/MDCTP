@@ -12,7 +12,7 @@ public class testCreateDataService {
     @Test
     public void testCreateDateService() {
         CreateDataService cds = new CreateDataService();
-        List<Worker> wlist = cds.createWorkers(50);
+        List<Worker> wlist = cds.createWorkers(500);
 
         Iterator it = wlist.iterator();
         while(it.hasNext())
@@ -32,6 +32,20 @@ public class testCreateDataService {
         {
             CTask cTask = (CTask) it.next();
             System.out.println(cTask.toString());
+        }
+    }
+
+    @Test
+    public void testCreateTypeWorkers()
+    {
+        CreateDataService cds = new CreateDataService();
+        List<Worker> wlist = cds.createTypeWorkers(100,2);
+
+        Iterator it = wlist.iterator();
+        while(it.hasNext())
+        {
+            Worker worker = (Worker) it.next();
+            System.out.println(worker.toString());
         }
     }
 }

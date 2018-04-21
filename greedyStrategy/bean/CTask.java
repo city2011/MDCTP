@@ -12,10 +12,12 @@ public class CTask {
     long start_time;
     long complete_time;
     int reputation;
+    int type;
     boolean status = false;
 
     public CTask(int id, int type, int reputation) {
         this.id = id;
+        this.type = type;
         this.reputation = reputation;
         switch (type) {
             case 0:
@@ -37,6 +39,7 @@ public class CTask {
     public long[] setInitTime(int type) {
         long start = System.currentTimeMillis();
         create_time = start;
+        start_time = start;
         switch (type) {
             case 0:
                 time = new long[8];
@@ -44,10 +47,10 @@ public class CTask {
                 time[1] = start + 2000;
 
                 time[2] = start + 2000;
-                time[3] = start + 4000;
+                time[3] = start + 3000;
 
                 time[4] = start + 2000;
-                time[5] = start + 3000;
+                time[5] = start + 4000;
 
                 time[6] = start + 4000;
                 time[7] = start + 6000;
@@ -70,7 +73,7 @@ public class CTask {
                 time[1] = start + 2000;
 
                 time[2] = start + 2000;
-                time[3] = start + 3000;
+                time[3] = start + 4000;
 
                 time[4] = start + 2000;
                 time[5] = start + 4000;
@@ -87,16 +90,16 @@ public class CTask {
     }
 
     public void updateTime(long upnumber) {
-        start_time = upnumber;
         for (int i = 0; i < time.length; i++
                 ) {
-            time[i]+=upnumber-create_time;
+            time[i]+=upnumber-start_time;
         }
+        start_time = upnumber;
     }
 
     public String toString()
     {
-        String ret = "Id:"+id+"  Sub:";
+        String ret = "Id:"+id+ "reputation:"+reputation+"status:"+status+"  Sub:";
         for (int x:sub) {
             ret+=""+x+" ";
         }
@@ -104,6 +107,7 @@ public class CTask {
         for (long y:time
                 ) {ret+=""+y+" ";
         }
+
         return ret;
     }
 
@@ -117,6 +121,10 @@ public class CTask {
 
     public int getId() {
         return id;
+    }
+
+    public int getType() {
+        return type;
     }
 
     public int[] getSub() {

@@ -15,6 +15,10 @@ public class testCTP {
     public void testTaskAssignment()
     {
         CTP ctp = new CTP();
-        ctp.taskAssignment(100,200);
+        for (int i = 100; i < 1000; i+=100) {
+            for (int j = 0; j < 10; j++) {
+                ctp.taskAssignment(i,500);
+            }
+        }
     }
 }

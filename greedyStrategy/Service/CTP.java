@@ -2,6 +2,7 @@ package greedyStrategy.Service;
 
 import greedyStrategy.bean.CTask;
 import greedyStrategy.bean.Worker;
+import greedyStrategy.dao.CTPDao;
 import greedyStrategy.util.Util;
 
 import java.util.ArrayList;
@@ -20,7 +21,6 @@ public class CTP {
         CreateDataService cds = new CreateDataService();
         List<CTask> clist = cds.createTasks(tasknum);
         List<Worker> wlist = cds.createWorkers(workernum);
-
 
         long startProgram = System.currentTimeMillis();
         for (CTask ct : clist) {
@@ -87,19 +87,85 @@ public class CTP {
             }
         }
         long endProgram = System.currentTimeMillis();
+        long expiredTime = (endProgram-startProgram);
+
         System.out.println();
         System.out.println("Start in:"+ Util.timestampToDate(startProgram));
         System.out.println("End in:"+Util.timestampToDate(endProgram));
-        System.out.println("Program Time expired: "+(endProgram-startProgram)+"ms");
+        System.out.println("Program Time expired: "+expiredTime+"ms");
         System.out.println();
-        getTaskReport(clist);
-        System.out.println();
-        getWorkerReport(wlist);
+
+        getReport(wlist,clist,expiredTime);
+
+//        getTaskReport(clist);
+//        System.out.println();
+//        getWorkerReport(wlist);
+
 //        System.out.println("Total Number of Tasks"+clist.size());
 //        System.out.println("Number of Completed Task "+ getCompletedTaskNumber(clist));
 //        System.out.println("Avarage task start - create:"+ getTaskWaitTime(clist));
 //        System.out.println("Avarage task complete - start:"+ getTaskWorkTime(clist));
 //        System.out.println("Avarage worker load number:"+ getWorkerLoad(wlist));
+    }
+
+    public void getReport(List<Worker> wlist,List<CTask> clist,long time)
+    {
+        int sum = 0;
+        long max = 0;
+        long min = 5000;
+        double avg = 0.0;
+        double avg_num = 0.0;
+        int workingnum = 0;
+        long load_time = 0;
+        long load_sum = 0;
+        for (Worker worker:wlist)
+        {
+            sum+=worker.getLoad().size();
+            if(worker.getLoad().size()>0)
+            {
+                workingnum++;
+                for (int i = 0; i < worker.getLoad().size()/2; i++) {
+                    load_time = worker.getLoad().get(i*2+1)-worker.getLoad().get(i*2);
+                    load_sum+=load_time;
+                    if(load_time>max)
+                        max = load_time;
+                    if(load_time<min)
+                        min = load_time;
+                }
+            }
+        }
+        avg = load_sum/workingnum;
+        avg_num = (double)(sum/2)/wlist.size();
+
+        long wait_sum=0;
+        int complete_num=0;
+        long complete_sum=0;
+        for (CTask cTask: clist) {
+            if (cTask.getStatus()==true) {
+                wait_sum += (cTask.getStart_time() - cTask.getCreate_time());
+                complete_sum += (cTask.getComplete_time()-cTask.getStart_time());
+                complete_num++;
+            }
+        }
+        double wait_ret = wait_sum/complete_num;
+        double complete_ret = complete_sum/complete_num;
+        int workerNumber = wlist.size();
+        int taskNumber = clist.size();
+
+        System.out.println("Total Number of Workers:"+ workerNumber);
+        System.out.println("Working Number of Workers:"+ workingnum);
+        System.out.println("Avarage Number of Tasks a Worker work on:"+ avg_num);
+        System.out.println("MAX worker load MS:"+ max);
+        System.out.println("Avarage worker load MS:"+ avg);
+        System.out.println("MAX worker load MS:"+ max);
+        System.out.println("MIN worker load MS:"+ min);
+
+        System.out.println("Total Number of Tasks"+taskNumber);
+        System.out.println("Number of Completed Task "+ complete_num);
+        System.out.println("Avarage task start - create:"+ Util.format2(wait_ret));
+        System.out.println("Avarage task complete - start:"+ Util.format2(complete_ret));
+
+        CTPDao.insertReport(workerNumber,taskNumber,avg_num,workingnum,avg,time);
     }
 
     private void getWorkerReport(List<Worker> wlist) {
@@ -173,6 +239,8 @@ public class CTP {
         double ret = sum/clist.size();
         return ret+"";
     }
+
+
 
     private int getIndexBySkill(int[] skill, int i) {
         for (int j = 0; j < skill.length; j++) {
