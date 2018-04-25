@@ -151,10 +151,10 @@ public class Worker {
             }
         });
         int size = checkload.size();
-        for (int i = 0;i<size;i++)
-        {
-            System.out.print(checkload.get(i)+"  ");
-        }
+//        for (int i = 0;i<size;i++)
+//        {
+//            System.out.print(checkload.get(i)+"  ");
+//        }
 
         int nstart = checkload.indexOf(start);
         int newend = checkload.indexOf(end);

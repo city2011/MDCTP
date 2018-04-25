@@ -29,9 +29,44 @@ public class CTPDao {
             pstm.setDouble(5,awlt);
             pstm.setLong(6,et);
             pstm.executeUpdate();
+
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
+
+    public static void insertOneRound(int workerNumber, int taskNumber, int complete_ret, int wait_ret, int complete_num, double avg, double avg_num,long time,String wtypenum) {
+        Connection conn = dbFactory.getConn();
+
+        String sql;
+        sql = "INSERT INTO OneAllocate (workernum,tasknum,suctnum,taskwait,taskcomplete,avgloadtime,avgloadnum,expiredtime,wtypenum) values (?,?,?,?,?,?,?,?,?)";
+        try {
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setInt(1,workerNumber);
+            pstm.setInt(2,taskNumber);
+            pstm.setInt(3,complete_num);
+            pstm.setInt(4,wait_ret);
+            pstm.setInt(5,complete_ret);
+            pstm.setDouble(6,avg);
+            pstm.setDouble(7,avg_num);
+            pstm.setInt(8,(int)time);
+            pstm.setString(9,wtypenum);
+            pstm.executeUpdate();
+
+            pstm.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
 //    // 执行查询

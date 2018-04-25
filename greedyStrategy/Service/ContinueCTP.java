@@ -21,17 +21,7 @@ public class ContinueCTP {
     public void continueAssignment(int workernum, int roundTasknum, int roundNum) {
         CreateDataService cds = new CreateDataService();
         int sumWorkerNum = workernum * 5;
-        List<Worker> wlist0 = cds.createTypeWorkers(workernum, 0);
-        List<Worker> wlist1 = cds.createTypeWorkers(workernum, 1);
-        List<Worker> wlist2 = cds.createTypeWorkers(workernum, 2);
-        List<Worker> wlist3 = cds.createTypeWorkers(workernum, 3);
-        List<Worker> wlist4 = cds.createTypeWorkers(workernum, 4);
-        List<Worker>[] workerSet = new List[5];
-        workerSet[0] = wlist0;
-        workerSet[1] = wlist1;
-        workerSet[2] = wlist2;
-        workerSet[3] = wlist3;
-        workerSet[4] = wlist4;
+        List<Worker>[] workerSet = cds.createTypeWorkerSet(workernum,0);
 
         CopyOnWriteArrayList<CTask> alist = new CopyOnWriteArrayList<>();
         List<CTask> sumClist = new ArrayList<>();
@@ -50,7 +40,7 @@ public class ContinueCTP {
             oneAssignment(workerSet, alist, assignmentSet);
             System.out.println();
             System.out.println("round " + roundtime + "End in:" + Util.timestampToDate(System.currentTimeMillis())
-            +"    expired "+(System.currentTimeMillis()-rounds));
+                    + "    expired " + (System.currentTimeMillis() - rounds));
             try {
                 Thread.sleep(300);
             } catch (InterruptedException e) {
@@ -79,11 +69,11 @@ public class ContinueCTP {
         System.out.println("Program Time expired: " + expiredTime + "ms");
         System.out.println();
 
-        getReport(workerSet, sumClist, endProgram, sumWorkerNum,assignmentSet,alist);
+        getReport(workerSet, sumClist, endProgram, sumWorkerNum, assignmentSet, alist,"both"+workernum);
     }
 
     // 参数  工人集合  待分配任务集合  分配集合
-    public void oneAssignment(List<Worker>[] workerSet, List<CTask> alist, List<Assignment> assignmentSet) {
+    public void oneAssignment(List<Worker>[] workerSet, CopyOnWriteArrayList<CTask> alist, List<Assignment> assignmentSet) {
         for (CTask ct : alist) {
             //更新任务的排产时间
             long start = System.currentTimeMillis() + 3000;
@@ -130,48 +120,44 @@ public class ContinueCTP {
                     wtypelist.add(wtype);
                     int skill_index = getIndexBySkill(workerSet[wtype].get(ind).getSkill(), ct.sub[i]);
 
-                    switch (ct.getType())
-                    {
+                    switch (ct.getType()) {
                         case 0:
-                            if(i==0) {
+                            if (i == 0) {
                                 time[2] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                                 time[4] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                            }
-                            else{
-                               if (i==1)
-                                   time[3] = time[2] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                               if (i==2) {
-                                   time[5] = time[4] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                                   time[6] = (time[3]<time[4]?time[3]:time[4]);
-                               }
-                               if(i==3)
-                                   time[7]= time[6]+workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
+                            } else {
+                                if (i == 1)
+                                    time[3] = time[2] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
+                                if (i == 2) {
+                                    time[5] = time[4] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
+                                    time[6] = (time[3] < time[4] ? time[3] : time[4]);
+                                }
+                                if (i == 3)
+                                    time[7] = time[6] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                             }
                             break;
                         case 1:
-                            if(i==0)
-                               time[2] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                            if(i==1)
+                            if (i == 0)
+                                time[2] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
+                            if (i == 1)
                                 time[4] = time[2] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                            if(i==2)
+                            if (i == 2)
                                 time[5] = time[4] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                             break;
                         case 2:
-                            if(i==0) {
+                            if (i == 0) {
                                 time[2] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                                 time[4] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                                 time[6] = time[0] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                            }
-                            else{
-                                if (i==1)
+                            } else {
+                                if (i == 1)
                                     time[3] = time[2] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                                if (i==2)
+                                if (i == 2)
                                     time[5] = time[4] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
-                                if(i==3) {
+                                if (i == 3) {
                                     time[7] = time[6] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                                     time[8] = time[7];
-                                }
-                                else
+                                } else
                                     time[9] = time[8] + workerSet[wtype].get(ind).getSkill_efficiency()[skill_index];
                             }
                             break;
@@ -205,7 +191,7 @@ public class ContinueCTP {
             }
         }
         System.out.println();
-        System.out.println("ASS SIZE: "+assignmentSet.size());
+        System.out.println("ASS SIZE: " + assignmentSet.size());
     }
 
     public void taskAssignment(int tasknum, int workernum) {
@@ -298,7 +284,7 @@ public class ContinueCTP {
 //        System.out.println("Avarage worker load number:"+ getWorkerLoad(wlist));
     }
 
-    public void getReport(List<Worker>[] wSet, List<CTask> clist, long time, int workernum, List<Assignment>assignments, List<CTask> alist) {
+    public void getReport(List<Worker>[] wSet, List<CTask> clist, long time, int workernum, List<Assignment> assignments, List<CTask> alist,String wtypenum) {
         int sum = 0;
         long max = 0;
         long min = 5000;
@@ -336,8 +322,8 @@ public class ContinueCTP {
                 complete_num++;
             }
         }
-        double wait_ret = wait_sum / complete_num;
-        double complete_ret = complete_sum / complete_num;
+        int wait_ret = (int)wait_sum / complete_num;
+        int complete_ret = (int)complete_sum / complete_num;
         int workerNumber = workernum;
         int taskNumber = clist.size();
 
@@ -353,16 +339,17 @@ public class ContinueCTP {
         System.out.println();
         System.out.println("Total Number of Tasks" + taskNumber);
         System.out.println("Number of Completed Task " + complete_num);
-        System.out.println("Avarage task start - create:" + Util.format2(wait_ret));
-        System.out.println("Avarage task complete - start:" + Util.format2(complete_ret));
+        System.out.println("Avarage task start - create:" + wait_ret);
+        System.out.println("Avarage task complete - start:" + complete_ret);
 
-for (Assignment ass:assignments)
-    System.out.print(ass.toString()+" ");
+        for (Assignment ass : assignments)
+            System.out.print(ass.toString() + " ");
 
-for(CTask cTask: alist)
-    System.out.println(cTask.toString());
+//        for (CTask cTask : alist)
+//            System.out.println(cTask.toString());
 
 //        CTPDao.insertReport(workerNumber, taskNumber, avg_num, workingnum, avg, time);
+        CTPDao.insertOneRound(workerNumber,taskNumber,complete_ret,wait_ret,complete_num,avg,avg_num,time,wtypenum);
     }
 
     private void getWorkerReport(List<Worker>[] workerSet, int sumWorkerNum) {

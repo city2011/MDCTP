@@ -39,7 +39,7 @@ public class testCreateDataService {
     public void testCreateTypeWorkers()
     {
         CreateDataService cds = new CreateDataService();
-        List<Worker> wlist = cds.createTypeWorkers(100,2);
+        List<Worker> wlist = cds.createTypeWorkers(30,2);
 
         Iterator it = wlist.iterator();
         while(it.hasNext())
